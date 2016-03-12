@@ -56,7 +56,7 @@ public class CircleImageView extends View {
         mPaint = new Paint();
         mPaint.setAntiAlias(true);
         mPaint.setDither(true);
-        mPaint.setShader(new BitmapShader(mBitmap, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP));
+        setShaderBitmap();
 
         // 初始化边界Paint
         mBorderPaint = new Paint();
@@ -83,6 +83,13 @@ public class CircleImageView extends View {
         Canvas canvas = new Canvas(tmpBitmap);
         mDrawable.draw(canvas);
 
+        scaleImage(tmpBitmap);
+    }
+
+    private void scaleImage(Bitmap tmpBitmap) {
+
+        int height = tmpBitmap.getHeight();
+        int width = tmpBitmap.getWidth();
         // 剪切成正方形
         int x = 0;
         int y = 0;
@@ -119,6 +126,32 @@ public class CircleImageView extends View {
     protected void onDraw(Canvas canvas) {
 
         canvas.drawCircle(mCircleCenter,mCircleCenter, mRadius, mPaint);
-        canvas.drawCircle(mCircleCenter,mCircleCenter, mRadius + mBorderWidth / 2, mBorderPaint);
+        canvas.drawCircle(mCircleCenter, mCircleCenter, mRadius + mBorderWidth / 2, mBorderPaint);
+    }
+
+    public void setImage(Bitmap bitmap)
+    {
+        scaleImage(bitmap);
+        setShaderBitmap();
+        invalidate();
+    }
+
+    public void setImage(int res)
+    {
+        scaleImage(getResources().getDrawable(res));
+        setShaderBitmap();
+        invalidate();
+    }
+
+    public void setImage(Drawable drawable)
+    {
+        scaleImage(drawable);
+        setShaderBitmap();
+        invalidate();
+    }
+
+    private void setShaderBitmap() {
+
+        mPaint.setShader(new BitmapShader(mBitmap, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP));
     }
 }
